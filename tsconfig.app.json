@@ -18,7 +18,8 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "stepscreen/*": ["steps-project-slot/*"]
     },
 
     /* Linting */
@@ -29,5 +30,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "luna-sidebar/**/*.js", "luna-sidebar/**/*.jsx"]
+  "include": [
+    "src",
+    "luna-sidebar/**/*.js",
+    "luna-sidebar/**/*.jsx",
+    "steps-project-slot/**/*.ts",
+    "steps-project-slot/**/*.tsx"
+  ]
 }
