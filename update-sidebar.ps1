@@ -1,19 +1,19 @@
 param(
-  [string]$CommitMessage = "Bump luna-sidebar submodule",
+  [string]$CommitMessage = "Bump waypoint-sidebar",
   [switch]$Push
 )
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Updating luna-sidebar submodule to latest remote commit..." -ForegroundColor Cyan
-git submodule update --remote luna-sidebar
+Write-Host "Updating waypoint-sidebar dependency to latest main..." -ForegroundColor Cyan
+npm install "waypoint-sidebar@git+https://github.com/AceConcept/waypoint-sidebar.git#main"
 
-Write-Host "Staging updated submodule pointer..." -ForegroundColor Cyan
-git add luna-sidebar
+Write-Host "Staging package lockfile..." -ForegroundColor Cyan
+git add package.json package-lock.json
 
 $hasChanges = git diff --cached --name-only
 if (-not $hasChanges) {
-  Write-Host "No new sidebar commit found. Nothing to commit." -ForegroundColor Yellow
+  Write-Host "No dependency changes. Nothing to commit." -ForegroundColor Yellow
   exit 0
 }
 
