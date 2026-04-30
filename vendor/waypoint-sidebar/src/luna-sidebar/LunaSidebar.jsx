@@ -12,6 +12,10 @@ import "./LunaSidebar.css";
 
 const PREVIEW_SCROLLBAR_MIN_THUMB_PX = 24;
 
+const DEFAULT_INFO_HREF =
+  "https://www.atencium-ui.com/design-gallery/polar-systems";
+const DEFAULT_INFO_TOOLTIP = "More Information";
+
 function parseCssLengthToPx(raw) {
   const s = String(raw ?? "").trim();
   if (!s) return null;
@@ -243,7 +247,34 @@ const PreviewStrip = forwardRef(function PreviewStrip(
 
 PreviewStrip.displayName = "PreviewStrip";
 
-function IntroSection({ title, description, stepNumber, heroImageUrl, onStart }) {
+const InfoIcon = () => (
+  <svg
+    className="intro-info-btn__icon"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 16v-4" />
+    <path d="M12 8h.01" />
+  </svg>
+);
+
+function IntroSection({
+  title,
+  description,
+  stepNumber,
+  heroImageUrl,
+  onStart,
+  onInfo,
+  infoHref,
+  infoTooltip,
+}) {
   return (
     <div className="intro-section">
       <div className="intro-hero" aria-hidden="true">
@@ -269,9 +300,23 @@ function IntroSection({ title, description, stepNumber, heroImageUrl, onStart })
       <div className="intro-copy">
         <h2 className="intro-title">{title}</h2>
         <p className="intro-description">{description}</p>
-        <button className="start-btn" type="button" onClick={onStart}>
-          Start
-        </button>
+        <div className="intro-actions" data-luna-sidebar-part="intro-actions">
+          <button className="start-btn" type="button" onClick={onStart}>
+            Start
+          </button>
+          <a
+            className="intro-info-btn"
+            href={infoHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-luna-sidebar-part="intro-info-btn"
+            title={infoTooltip}
+            aria-label={`${infoTooltip} (opens in new tab)`}
+            onClick={() => onInfo?.()}
+          >
+            <InfoIcon />
+          </a>
+        </div>
       </div>
     </div>
   );
@@ -286,6 +331,9 @@ function IntroSection({ title, description, stepNumber, heroImageUrl, onStart })
  * @param {boolean} [props.expanded] — controlled drawer; omit for uncontrolled (uses defaultExpanded)
  * @param {string} [props.railLabel]
  * @param {(id: string) => void} [props.onActiveItemChange] — fired when user clicks **Start** (not on preview strip taps)
+ * @param {() => void} [props.onInfo] — optional; fired when user activates the info link
+ * @param {string} [props.infoHref] — URL for the info control (default: Polar Systems gallery)
+ * @param {string} [props.infoTooltip] — native tooltip + aria (default: “More Information”)
  * @param {(open: boolean) => void} [props.onExpandedChange]
  */
 export function LunaSidebar({
@@ -296,6 +344,9 @@ export function LunaSidebar({
   expanded: expandedProp,
   railLabel = "LUNA STATE MANAGER",
   onActiveItemChange,
+  onInfo,
+  infoHref = DEFAULT_INFO_HREF,
+  infoTooltip = DEFAULT_INFO_TOOLTIP,
   onExpandedChange,
 }) {
   const [expandedInner, setExpandedInner] = useState(defaultExpanded);
@@ -443,6 +494,9 @@ export function LunaSidebar({
                     stepNumber={activeStepNumber}
                     heroImageUrl={activePreview.heroImageUrl}
                     onStart={handleStart}
+                    onInfo={onInfo}
+                    infoHref={infoHref}
+                    infoTooltip={infoTooltip}
                   />
                   <PreviewStrip
                     ref={previewListRef}

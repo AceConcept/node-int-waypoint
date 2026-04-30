@@ -17,6 +17,8 @@
   --sidebar-active: #c5c5c5;
   --preview-list-bg: #e4e3e3;
   --sidebar-start-bg: #1c1c1c;
+  /* Start button height; info control matches this width × height (see .intro-info-btn). */
+  --sidebar-start-btn-height: 4.5rem;
 /*  Design canvas 160×90 rem (1rem = browser default size); keep DESIGN_REM_H in canvasScale.js equal to --canvas-h */
   --canvas-w: 160rem;
   --canvas-h: 90rem;
@@ -407,7 +409,7 @@
   padding-top: 0.75rem;
 }
 
-.intro-copy > .start-btn {
+.intro-copy > .intro-actions {
   margin-top: 2rem;
   margin-bottom: 0.5625rem;
 }
@@ -430,13 +432,25 @@
   overflow-wrap: break-word;
 }
 
+.intro-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 .start-btn {
   margin-top: 0;
   margin-bottom: 0;
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
   box-sizing: border-box;
-  height: 4.5rem; /* 72÷16 */
-  min-height: 4.5rem;
+  height: var(--sidebar-start-btn-height);
+  min-height: var(--sidebar-start-btn-height);
   padding: 0 1rem;
   border: 0;
   border-radius: 0.2rem;
@@ -456,6 +470,40 @@
 
 .start-btn:hover {
   filter: brightness(1.08);
+}
+
+.intro-info-btn {
+  flex: 0 0 var(--sidebar-start-btn-height);
+  width: var(--sidebar-start-btn-height);
+  min-width: var(--sidebar-start-btn-height);
+  height: var(--sidebar-start-btn-height);
+  min-height: var(--sidebar-start-btn-height);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0.0625rem solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(28, 28, 28, 0.92);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.intro-info-btn:visited {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.intro-info-btn:hover {
+  filter: brightness(1.12);
+}
+
+.intro-info-btn__icon {
+  width: 1.5rem; /* 24px icon in square control */
+  height: 1.5rem;
+  display: block;
 }
 
 /* —— Step list: window chrome + vertical scroll —— */
