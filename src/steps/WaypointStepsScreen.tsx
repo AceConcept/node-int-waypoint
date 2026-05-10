@@ -4,6 +4,9 @@ import { polarFlowIdFromHash, useFlowStore } from '../store/flowStore'
 const ARTBOARD_WIDTH = 2560
 const ARTBOARD_HEIGHT = 1440
 
+/** Main stage embed (Valentia app) */
+const VALENTIA_STAGE_URL = 'https://valentia.guildconcept.workers.dev/'
+
 type WaypointStepsScreenProps = {
   polarHash: string
 }
@@ -86,9 +89,11 @@ export default function WaypointStepsScreen({ polarHash }: WaypointStepsScreenPr
             transformOrigin: 'top left',
           }}
         >
-          <div className="stepscreen-placeholder" role="status">
-            File shows up here
-          </div>
+          <iframe
+            className="stepscreen-embed"
+            title="Valentia Markets"
+            src={VALENTIA_STAGE_URL}
+          />
         </div>
       </div>
     </div>
