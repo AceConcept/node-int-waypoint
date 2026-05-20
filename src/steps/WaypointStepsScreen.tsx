@@ -7,7 +7,8 @@ import {
 } from '../luna/LunaStageEmbedContext'
 import {
   polarFlowIdFromHash,
-  stageEmbedUrl,
+  stageEmbedUrlForStep,
+  useFlowStep,
   useFlowStore,
 } from '../store/flowStore'
 
@@ -16,14 +17,11 @@ const embedTransition = {
   ease: 'easeOut' as const,
 }
 
-type WaypointStepsScreenProps = {
-  polarHash: string
-}
-
-export default function WaypointStepsScreen({ polarHash }: WaypointStepsScreenProps) {
+export default function WaypointStepsScreen() {
   const hostRef = useRef<HTMLDivElement>(null)
+  const { step } = useFlowStep()
   const { stageEmbedVisible } = useLunaStageEmbed()
-  const embedSrc = stageEmbedUrl(polarHash)
+  const embedSrc = stageEmbedUrlForStep(step.id)
 
   useEffect(() => {
     const onHashChange = () => {

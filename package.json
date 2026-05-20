@@ -7,6 +7,8 @@
     "node": ">=20.17.0"
   },
   "scripts": {
+    "build:slot": "npm install --prefix steps-project-slot --no-audit --no-fund && npm run build --prefix steps-project-slot",
+    "dev:slot": "npm run dev --prefix steps-project-slot -- --port 5174 --strictPort",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

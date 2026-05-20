@@ -334,11 +334,13 @@
   border-radius: 0;
 }
 
-/* Hero + preview thumbs: step swatch color (set inline); hide placeholder artwork */
+/* Hero + preview thumbs: step swatch shows behind image while loading */
 .luna-root .wp-sidebar__hero-image,
-.luna-root .wp-sidebar__card-media .wp-sidebar__thumb-image,
-.luna-root .wp-sidebar__card-media .wp-sidebar__thumb-index {
-  display: none;
+.luna-root .wp-sidebar__card-media .wp-sidebar__thumb-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Preview list: show "-" under step label (see flowSidebarItems.previewDescription) */

@@ -1,35 +1,32 @@
 import { create } from 'zustand'
 import { STEP_DESCRIPTIONS, STEP_TITLES } from '../stepDescriptions'
+import { postStageEmbedStep } from './stageEmbedBridge'
+import {
+  FLOW_STEP_IDS,
+  POLAR_SYS_HASH,
+  type FlowStepId,
+} from './stageEmbedConfig'
 
-/** Generic numbered step ids (1–6). */
-export type FlowStepId = '1' | '2' | '3' | '4' | '5' | '6'
+export type { FlowStepId } from './stageEmbedConfig'
+export {
+  FLOW_STEP_IDS,
+  getStageEmbedOrigin,
+  POLAR_SYS_HASH,
+  STAGE_EMBED_ORIGIN,
+  stageEmbedUrl,
+  stageEmbedUrlForStep,
+} from './stageEmbedConfig'
 
-export const FLOW_STEP_IDS = ['1', '2', '3', '4', '5', '6'] as const satisfies readonly FlowStepId[]
-
-/** Map `#/2` … `#/6` hash segments to step ids; empty hash → step 1. */
+/** Map `#1` … `#6` (or legacy `#/N`) to step ids. */
 export function polarFlowIdFromHash(hash: string): FlowStepId {
-  const m = String(hash || '').match(/#\/(\d+)/)
-  const segment = m ? m[1] : ''
+  const segment = String(hash || '')
+    .replace(/^#/, '')
+    .replace(/^\//, '')
+    .trim()
   if (FLOW_STEP_IDS.includes(segment as FlowStepId)) {
     return segment as FlowStepId
   }
   return '1'
-}
-
-export const POLAR_SYS_HASH: Record<FlowStepId, string> = {
-  '1': '',
-  '2': '#/2',
-  '3': '#/3',
-  '4': '#/4',
-  '5': '#/5',
-  '6': '#/6',
-}
-
-/** Center-stage iframe origin (polar-sys / steps slot). */
-export const STAGE_EMBED_ORIGIN = 'https://steps-project-slot.vercel.app'
-
-export function stageEmbedUrl(polarHash: string): string {
-  return `${STAGE_EMBED_ORIGIN}${polarHash}`
 }
 
 export const FLOW_STEPS: {
@@ -39,7 +36,7 @@ export const FLOW_STEPS: {
 }[] = FLOW_STEP_IDS.map((id, i) => ({
   id,
   title: STEP_TITLES[i] ?? STEP_TITLES[0],
-  body: STEP_DESCRIPTIONS[i] ?? '',
+  body: STEP_DESCRIPTIONS[i] ?? STEP_DESCRIPTIONS[0],
 }))
 
 function initialStepIndexFromLocation(): number {
@@ -55,6 +52,8 @@ type FlowState = {
   back: () => void
   goToStep: (index: number) => void
   goToStepById: (id: FlowStepId) => void
+  /** Shell trackers only — iframe already navigated (avoids round-trip). */
+  syncStepFromEmbed: (id: FlowStepId) => void
   reset: () => void
 }
 
@@ -62,18 +61,34 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   stepIndex: initialStepIndexFromLocation(),
   next: () => {
     const i = get().stepIndex
-    if (i < FLOW_STEPS.length - 1) set({ stepIndex: i + 1 })
+    if (i < FLOW_STEPS.length - 1) get().goToStepById(FLOW_STEPS[i + 1].id)
   },
   back: () => {
     const i = get().stepIndex
-    if (i > 0) set({ stepIndex: i - 1 })
+    if (i > 0) get().goToStepById(FLOW_STEPS[i - 1].id)
   },
   goToStep: (index) => {
-    if (index >= 0 && index < FLOW_STEPS.length) set({ stepIndex: index })
+    if (index >= 0 && index < FLOW_STEPS.length) get().goToStepById(FLOW_STEPS[index].id)
   },
   goToStepById: (id) => {
     const index = FLOW_STEPS.findIndex((s) => s.id === id)
     if (index < 0) return
+    if (get().stepIndex === index) return
+    set({ stepIndex: index })
+    if (typeof window !== 'undefined') {
+      const hash = POLAR_SYS_HASH[id]
+      if (window.location.hash !== hash) {
+        const url = new URL(window.location.href)
+        url.hash = hash
+        window.history.replaceState(null, '', url)
+      }
+      postStageEmbedStep(Number(id)) // no-op until slot deploy listens; src hash is primary
+    }
+  },
+  syncStepFromEmbed: (id) => {
+    const index = FLOW_STEPS.findIndex((s) => s.id === id)
+    if (index < 0) return
+    if (get().stepIndex === index) return
     set({ stepIndex: index })
     if (typeof window !== 'undefined') {
       const hash = POLAR_SYS_HASH[id]

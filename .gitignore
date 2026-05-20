@@ -13,9 +13,8 @@ vendor/waypoint-sidebar/node_modules
 # Local assets / scratch (not tracked)
 注意/
 
-# Legacy submodule checkout (removed from index); ignore if still present locally
-steps-project-slot/
 dist
+public/stage-slot/
 dist-ssr
 *.local
 

@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import { LunaCanvasScaleContext } from 'waypoint-sidebar/src/luna-sidebar/index.js'
-import { POLAR_SYS_HASH, stageEmbedUrl, useFlowStep } from '../store/flowStore'
+import { stageEmbedUrlForStep, useFlowStep } from '../store/flowStore'
 import {
   getCanvasContainScale,
   SIDEBAR_COLLAPSED_REM,
@@ -24,6 +24,7 @@ import {
   STAGE_EMBED_HANDOFF_MS,
 } from './LunaStageEmbedContext'
 import { StageEmbedFrame } from './StageEmbedFrame'
+import { LunaGutterVideoBg } from './LunaGutterVideoBg'
 import { WaypointNavbar } from './WaypointNavbar'
 import './lunaChrome.css'
 
@@ -51,7 +52,7 @@ export function LunaChrome({
   const [stageEmbedVisible, setStageEmbedVisible] = useState(true)
   const [fullscreenEmbedMounted, setFullscreenEmbedMounted] = useState(false)
   const { step } = useFlowStep()
-  const fullscreenEmbedSrc = stageEmbedUrl(POLAR_SYS_HASH[step.id])
+  const fullscreenEmbedSrc = stageEmbedUrlForStep(step.id)
 
   const openFullscreen = useCallback(() => {
     setFullscreenOpen(true)
@@ -152,6 +153,7 @@ export function LunaChrome({
         <WaypointNavbar />
         <div className="waypoint-horizontal">
           <div className="luna-space-left">
+            <LunaGutterVideoBg />
             <div className="content-pos">
               <div className="graphic">
                 <div className="graphic-positioner">
@@ -191,9 +193,6 @@ export function LunaChrome({
                   >
                     Full screen
                   </button>
-                  <button type="button" className="content-button content-button--case-study">
-                    Case study
-                  </button>
                 </div>
               </div>
             </div>
@@ -206,7 +205,9 @@ export function LunaChrome({
               {children}
             </div>
           </div>
-          <div className="luna-space-right" aria-hidden="true" />
+          <div className="luna-space-right" aria-hidden="true">
+            <LunaGutterVideoBg />
+          </div>
         </div>
         <LunaCanvasScaleContext.Provider value={scale}>
           {sidebar({ expanded, onExpandedChange: setExpanded })}
