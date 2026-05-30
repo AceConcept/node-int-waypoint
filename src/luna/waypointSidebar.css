@@ -31,7 +31,6 @@
   --page-row-otf-footer-h: 48rem;
   --stage-w: 120rem;
   --sidebar-rail-w: 6.125rem; /* 98px @ 16px/rem */
-  --sidebar-collapsed: 6.125rem;
   /*
     Expanded sidebar (design rem, 1rem = browser default on :root):
     - --sidebar-expanded: full shell width when open (drawer + rail) = 49.3125rem (789÷16).
@@ -80,7 +79,7 @@
   z-index: 20;
   background-color: var(--sidebar-shell-bg);
   background-image: none;
-  width: var(--sidebar-collapsed);
+  width: var(--sidebar-rail-w);
   height: 100%;
   position: absolute;
   top: 0;
@@ -610,9 +609,10 @@ a.wp-sidebar__info:visited {
   position: absolute;
   z-index: 1;
   left: 1.25rem;
-  top: 0.75rem;
-  bottom: 0.75rem;
+  top: 50%;
   width: 0.5625rem;
+  height: 7.75rem; /* match .wp-sidebar__card-media */
+  transform: translateY(-50%);
   background: #fff;
   border-radius: 0.0625rem;
   box-shadow: 0 0 0 0.0625rem rgba(0, 0, 0, 0.06);
@@ -629,7 +629,7 @@ a.wp-sidebar__info:visited {
 }
 
 .wp-sidebar__card.is-active .wp-sidebar__card-media {
-  margin-left: 3.0625rem; /* 1.25rem inset + 0.5625rem bar + 1.25rem (20px) gap */
+  margin-left: 2.0625rem;
 }
 
 .wp-sidebar__card-body {
