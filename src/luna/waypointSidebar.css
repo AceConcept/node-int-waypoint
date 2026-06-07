@@ -601,7 +601,7 @@ a.wp-sidebar__info:visited {
   Bar is absolute (no flow). margin-left on .wp-sidebar__card-media clears bar + 20px gap.
 */
 .wp-sidebar__card.is-active {
-  background: var(--sidebar-active);
+  background: transparent;
 }
 
 .wp-sidebar__card.is-active::before {

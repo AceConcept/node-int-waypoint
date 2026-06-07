@@ -383,5 +383,5 @@
 }
 
 .luna-canvas-row .navbar-manager-menu .wp-sidebar__card.is-active:hover {
-  background: var(--sidebar-active);
+  background: #d5d4d4;
 }
