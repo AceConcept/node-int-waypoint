@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef } from 'react'
-import { StageEmbedFrame } from '../luna/StageEmbedFrame'
+import { CrossfadeStageEmbed } from '../luna/CrossfadeStageEmbed'
 import {
   STAGE_EMBED_HANDOFF_MS,
   useLunaStageEmbed,
@@ -44,7 +44,7 @@ export default function WaypointStepsScreen() {
               exit={{ opacity: 0 }}
               transition={embedTransition}
             >
-              <StageEmbedFrame
+              <CrossfadeStageEmbed
                 className="stepscreen-embed"
                 src={embedSrc}
                 title="Atencium steps"

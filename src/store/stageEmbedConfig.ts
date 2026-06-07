@@ -1,20 +1,22 @@
-/** Generic numbered step ids (1–6). */
-export type FlowStepId = '1' | '2' | '3' | '4' | '5' | '6'
+/** Generic numbered step ids (1–2). */
+export type FlowStepId = '1' | '2'
 
-export const FLOW_STEP_IDS = ['1', '2', '3', '4', '5', '6'] as const satisfies readonly FlowStepId[]
+export const FLOW_STEP_IDS = ['1', '2'] as const satisfies readonly FlowStepId[]
 
-/** Must match steps-project-slot hash routes (`#1` … `#6`, not `#/1`). */
+/** Shell URL hashes (`#1` … `#2`). */
 export const POLAR_SYS_HASH: Record<FlowStepId, string> = {
   '1': '#1',
   '2': '#2',
-  '3': '#3',
-  '4': '#4',
-  '5': '#5',
-  '6': '#6',
 }
 
-/** iframe target — https://steps-project-slot.vercel.app (#1 … #6) */
-export const STAGE_EMBED_ORIGIN = 'https://steps-project-slot.vercel.app'
+/** iframe origin — https://integration-node-view.vercel.app */
+export const STAGE_EMBED_ORIGIN = 'https://integration-node-view.vercel.app'
+
+/** Per-step iframe URLs (path-based, not hash-based). */
+const STAGE_EMBED_URLS: Record<FlowStepId, string> = {
+  '1': STAGE_EMBED_ORIGIN,
+  '2': `${STAGE_EMBED_ORIGIN}/integration/python-1`,
+}
 
 export function getStageEmbedOrigin(): string {
   const envOrigin = import.meta.env.VITE_STAGE_EMBED_ORIGIN as string | undefined
@@ -22,11 +24,12 @@ export function getStageEmbedOrigin(): string {
   return STAGE_EMBED_ORIGIN
 }
 
-export function stageEmbedUrl(polarHash: string): string {
-  const base = getStageEmbedOrigin().replace(/\/$/, '')
-  return `${base}${polarHash}`
-}
-
 export function stageEmbedUrlForStep(id: FlowStepId): string {
-  return stageEmbedUrl(POLAR_SYS_HASH[id])
+  const envOrigin = import.meta.env.VITE_STAGE_EMBED_ORIGIN as string | undefined
+  if (envOrigin?.trim()) {
+    const base = envOrigin.trim().replace(/\/$/, '')
+    if (id === '1') return base
+    return `${base}/integration/python-1`
+  }
+  return STAGE_EMBED_URLS[id]
 }

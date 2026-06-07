@@ -23,11 +23,9 @@ const PRIMARY_NAV_STEPS: {
 }[] = [
   { className: 'step-1', label: 'Step One', flowId: FLOW_STEPS[0]?.id ?? '1' },
   { className: 'step-2', label: 'Step Two', flowId: FLOW_STEPS[1]?.id ?? '2' },
-  { className: 'step-3', label: 'Step Three', flowId: FLOW_STEPS[2]?.id ?? '3' },
-  { className: 'step-4', label: 'Step Four', flowId: FLOW_STEPS[3]?.id ?? '4' },
 ]
 
-const MANAGER_ONLY_STEPS = new Set<FlowStepId>(['5', '6'])
+const MANAGER_ONLY_STEPS = new Set<FlowStepId>()
 
 type StepTabProps = {
   className: string

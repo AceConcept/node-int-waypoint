@@ -6,16 +6,25 @@ type StageEmbedFrameProps = {
   src: string
   title: string
   className?: string
+  /** When false, iframe is preloading off-screen and does not own the embed bridge. */
+  active?: boolean
+  onReady?: () => void
 }
 
-/** iframe points at steps-project-slot; src updates navigate #/1 … #/6 without remounting. */
-export function StageEmbedFrame({ src, title, className }: StageEmbedFrameProps) {
+export function StageEmbedFrame({
+  src,
+  title,
+  className,
+  active = true,
+  onReady,
+}: StageEmbedFrameProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
   useEffect(() => {
+    if (!active) return
     registerStageEmbedFrame(iframeRef.current)
     return () => registerStageEmbedFrame(null)
-  }, [])
+  }, [active])
 
   useEffect(() => {
     const frame = iframeRef.current
@@ -40,6 +49,8 @@ export function StageEmbedFrame({ src, title, className }: StageEmbedFrameProps)
       loading="eager"
       referrerPolicy="strict-origin-when-cross-origin"
       onLoad={() => {
+        onReady?.()
+        if (!active) return
         const { stepIndex } = useFlowStore.getState()
         postStageEmbedStep(stepIndex + 1)
       }}

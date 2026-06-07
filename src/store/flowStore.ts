@@ -13,11 +13,10 @@ export {
   getStageEmbedOrigin,
   POLAR_SYS_HASH,
   STAGE_EMBED_ORIGIN,
-  stageEmbedUrl,
   stageEmbedUrlForStep,
 } from './stageEmbedConfig'
 
-/** Map `#1` … `#6` (or legacy `#/N`) to step ids. */
+/** Map `#1` … `#2` (or legacy `#/N`) to step ids. */
 export function polarFlowIdFromHash(hash: string): FlowStepId {
   const segment = String(hash || '')
     .replace(/^#/, '')
