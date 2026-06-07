@@ -17,8 +17,13 @@ export type FlowSidebarItem = {
   heroImageUrl?: string
 }
 
+const STEP_IMAGE_FILES: Record<1 | 2, string> = {
+  1: 'Node-StepOne.png',
+  2: 'Node-steptwo.png',
+}
+
 function stepImagePath(n: 1 | 2): string {
-  const base = `/step_imgs/${encodeURIComponent(`Step ${n}.png`)}`
+  const base = `/step_imgs/${encodeURIComponent(STEP_IMAGE_FILES[n])}`
   const v = typeof __STEP_IMG_VER__ !== 'undefined' && __STEP_IMG_VER__
     ? __STEP_IMG_VER__
     : ''
