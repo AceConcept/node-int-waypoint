@@ -13,6 +13,8 @@ type LoadingScreenProps = {
   onComplete?: () => void
 }
 
+const LOADSCREEN_BG_URL = '/loadingscrn/ldingBG.png'
+const BG_LOAD_TIMEOUT_MS = 5000
 const PROGRESS_MS = 3000
 const PAUSE_MS = 120
 const SWEEP_MS_MIN = 400
@@ -37,6 +39,7 @@ export function LoadingScreen({
   progress: holdProgress = 56,
   onComplete,
 }: LoadingScreenProps) {
+  const [bgReady, setBgReady] = useState(hold)
   const [simProgress, setSimProgress] = useState(0)
   const shutterRef = useRef<HTMLDivElement>(null)
   const onCompleteRef = useRef(onComplete)
@@ -67,7 +70,34 @@ export function LoadingScreen({
   }, [hold])
 
   useEffect(() => {
-    if (hold) return
+    if (hold) {
+      setBgReady(true)
+      return
+    }
+
+    let cancelled = false
+    const img = new Image()
+    const finish = () => {
+      if (!cancelled) setBgReady(true)
+    }
+
+    img.onload = finish
+    img.onerror = finish
+    img.src = LOADSCREEN_BG_URL
+    if (img.complete) finish()
+
+    const timeout = window.setTimeout(finish, BG_LOAD_TIMEOUT_MS)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timeout)
+      img.onload = null
+      img.onerror = null
+    }
+  }, [hold])
+
+  useEffect(() => {
+    if (hold || !bgReady) return
 
     const start = performance.now()
     let frame = 0
@@ -81,10 +111,10 @@ export function LoadingScreen({
 
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [hold])
+  }, [hold, bgReady])
 
   useEffect(() => {
-    if (hold) return
+    if (hold || !bgReady) return
 
     const finish = () => {
       if (finishedRef.current) return
@@ -124,12 +154,12 @@ export function LoadingScreen({
       window.clearTimeout(revealTimer)
       window.clearTimeout(fallback)
     }
-  }, [hold, fadeDelayMs, totalMs])
+  }, [hold, bgReady, fadeDelayMs, totalMs])
 
   const shutter = (
     <div
       ref={shutterRef}
-      className={`loadscreen${hold ? '' : ' loadscreen--sequence'}`}
+      className={`loadscreen${bgReady ? ' loadscreen--bg-ready' : ''}${!hold && bgReady ? ' loadscreen--sequence' : ''}`}
       role="progressbar"
       aria-valuenow={progress}
       aria-valuemin={0}
