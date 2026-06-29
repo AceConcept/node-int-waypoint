@@ -18,7 +18,6 @@ import {
   STAGE_EMBED_HANDOFF_MS,
 } from './LunaStageEmbedContext'
 import { StageEmbedFrame } from './StageEmbedFrame'
-import { LunaGutterVideoBg } from './LunaGutterVideoBg'
 import { WaypointNavbar } from './WaypointNavbar'
 import { getCanvasContainScale } from 'waypoint-sidebar/src/luna-sidebar/canvasScale.js'
 import './lunaChrome.css'
@@ -120,7 +119,6 @@ export function LunaChrome({ children, footerBackgroundUrl }: LunaChromeProps) {
         <WaypointNavbar />
         <div className="waypoint-horizontal">
           <div className="luna-space-left">
-            <LunaGutterVideoBg />
             <div className="content-pos">
               <div className="graphic">
                 <div className="graphic-positioner">
@@ -168,9 +166,7 @@ export function LunaChrome({ children, footerBackgroundUrl }: LunaChromeProps) {
           <div className="luna-center-column">
             <div className="luna-design-surface">{children}</div>
           </div>
-          <div className="luna-space-right" aria-hidden="true">
-            <LunaGutterVideoBg />
-          </div>
+          <div className="luna-space-right" aria-hidden="true" />
         </div>
       </div>
       <div className="luna-footer-slot" style={footerSlotStyle}>
